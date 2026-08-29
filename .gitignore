@@ -1,0 +1,16 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+
+# User-specific settings
+*.user
+*.rsuser
+
+# Report Builder cached data
+*.rdl.data
+
+# Build / temporary files
+*.pdb
+*.cache
+*.log
