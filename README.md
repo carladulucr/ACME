@@ -1,496 +1,261 @@
-\# Corporación ACME — Business Intelligence
+# Corporación ACME — Business Intelligence
 
+Proyecto académico de **Business Intelligence** desarrollado para la gestión, transformación y análisis de información empresarial mediante un ecosistema de tecnologías Microsoft.
 
+La solución integra una **base de datos transaccional, un proceso ETL, un Data Warehouse, un modelo multidimensional con cubo OLAP, reportes empresariales y un dashboard interactivo**, permitiendo transformar datos operacionales en información estructurada para el análisis y la toma de decisiones.
 
-Proyecto de Business Intelligence desarrollado para la gestión, transformación y análisis de información empresarial mediante un ecosistema de tecnologías Microsoft.
+El conjunto de datos utilizado corresponde a un período de **tres meses**, debido al alcance definido para este proyecto académico.
 
+## Tecnologías utilizadas
 
+* **Microsoft SQL Server** — Base de datos transaccional y Data Warehouse
+* **SQL** — Consultas, creación, transformación y manipulación de datos
+* **SQL Server Integration Services (SSIS)** — Procesos ETL
+* **SQL Server Analysis Services (SSAS)** — Modelo multidimensional y cubo OLAP
+* **SQL Server Reporting Services (SSRS)** — Desarrollo de reportes empresariales
+* **Microsoft Power BI** — Visualización y análisis interactivo de datos
+* **Visual Studio** — Desarrollo y gestión de los proyectos SSIS y SSAS
 
-La solución integra una base de datos transaccional, un proceso ETL, un Data Warehouse, un cubo OLAP, reportes empresariales y un dashboard interactivo, permitiendo transformar datos operacionales en información útil para el análisis y la toma de decisiones. Tomando en cuenta que solo se encuentran 3 meses con datos ya que fue un proyecto pequeño.
-
-
-
-\## Tecnologías utilizadas
-
-
-
-\* \*\*Microsoft SQL Server\*\* — Base de datos y Data Warehouse
-
-\* \*\*SQL\*\* — Consultas, creación y transformación de datos
-
-\* \*\*SQL Server Integration Services (SSIS)\*\* — Procesos ETL
-
-\* \*\*SQL Server Analysis Services (SSAS)\*\* — Modelo multidimensional y cubo OLAP
-
-\* \*\*SQL Server Reporting Services (SSRS)\*\* — Reportes empresariales
-
-\* \*\*Microsoft Power BI\*\* — Visualización y análisis de datos
-
-\* \*\*Visual Studio\*\* — Desarrollo de los proyectos SSIS y SSAS
-
-
-
-\## Arquitectura de la solución
-
-
+## Arquitectura de la solución
 
 El proyecto sigue un flujo de procesamiento de datos compuesto por las siguientes etapas:
 
+```text
+                 BD Transaccional
+                       │
+                       ▼
+                     SSIS
+                      ETL
+                       │
+                       ▼
+                Data Warehouse
+                       │
+          ┌────────────┴────────────┐
+          │                         │
+          ▼                         ▼
+      Power BI                    SSAS
+     (origen: DW)              Cubo OLAP
+                                    │
+                                    ▼
+                                  SSRS
+                         (origen: DW y/o Cubo)
+```
 
+<img width="502" height="535" alt="Arquitectura de la solución" src="https://github.com/user-attachments/assets/e39fba04-c829-4491-a878-1ad799bfa49e" />
 
+## Componentes del proyecto
 
+### 1. Base de datos transaccional
 
-Base de datos transaccional
+**Archivo:**
 
-&#x20;         │
-
-&#x20;         ▼
-
-&#x20;       SSIS
-
-&#x20;      ETL
-
-&#x20;         │
-
-&#x20;         ▼
-
-&#x20;  Data Warehouse
-
-&#x20;         │
-
-&#x20;         ├──────────────► SSRS   y    Power BI Dashboard
-
-&#x20;         │                Reportes
-
-&#x20;         │
-
-&#x20;         ▼
-
-&#x20;      SSAS
-
-&#x20;    Cubo OLAP
-
-&#x20;         
-
-&#x20;  
-
-
-
-
-
-\## Componentes del proyecto
-
-
-
-\### 1. Base de datos transaccional
-
-
-
-Archivo:
-
-
-
-DB\_CorporacionACME.sql
-
-
+`DB_CorporacionACME.sql`
 
 Contiene el script de creación y configuración de la base de datos operacional utilizada como fuente de información para el proceso de integración de datos.
 
+### 2. Data Warehouse
 
+**Archivo:**
 
-\### 2. Data Warehouse
+`DW_CorporacionACME.sql`
 
+Contiene la estructura del **Data Warehouse** utilizado para almacenar la información preparada para el análisis.
 
+El Data Warehouse permite separar los procesos analíticos de la operación transaccional y facilita la generación de consultas, reportes y análisis sobre la información almacenada.
 
-Archivo:
+### 3. Proceso ETL — SSIS
 
+**Carpeta:**
 
+`ETL_CorporacionACME/`
 
-DW\_CorporacionACME.sql
-
-
-
-
-
-Contiene la estructura del Data Warehouse utilizado para almacenar la información preparada para análisis.
-
-
-
-El Data Warehouse permite separar los procesos analíticos de la operación transaccional y facilita la generación de consultas y reportes orientados al análisis histórico.
-
-
-
-\### 3. Proceso ETL — SSIS
-
-
-
-Carpeta:
-
-
-
-ETL\_CorporacionACME/
-
-
-
-
-
-Contiene el proyecto desarrollado con SQL Server Integration Services.
-
-
+Contiene el proyecto desarrollado con **SQL Server Integration Services (SSIS)**.
 
 El proceso ETL se encarga de:
 
+* Extraer información desde la base de datos operacional.
+* Transformar y preparar los datos.
+* Cargar la información en el Data Warehouse.
 
+**Archivo principal del paquete:**
 
-\* Extraer información desde la base de datos operacional.
+`Package.dtsx`
 
-\* Transformar los datos.
+### 4. Cubo OLAP — SSAS
 
-\* Cargar la información en el Data Warehouse.
+**Carpeta:**
 
-\* Automatizar el flujo de integración de datos.
+`CuboDwCorporacionACME/`
 
-
-
-Archivo principal del paquete:
-
-
-
-Package.dtsx
-
-
-
-\### 4. Cubo OLAP — SSAS
-
-
-
-Carpeta:
-
-
-
-CuboDwCorporacionACME/
-
-
-
-Contiene el proyecto desarrollado con SQL Server Analysis Services.
-
-
+Contiene el proyecto desarrollado con **SQL Server Analysis Services (SSAS)**.
 
 El modelo multidimensional incluye dimensiones relacionadas con:
 
+* Cliente
+* Condición de pago
+* Descuento
+* Empleado
+* Fecha
+* Forma de pago
+* Producto
 
+El cubo OLAP utiliza el Data Warehouse como fuente de información y permite realizar análisis multidimensionales sobre los datos empresariales.
 
-\* Cliente
+### 5. Reportes — SSRS
 
-\* Condición de pago
+**Carpeta:**
 
-\* Descuento
+`ReportesACME/`
 
-\* Empleado
-
-\* Fecha
-
-\* Forma de pago
-
-\* Producto
-
-
-
-El cubo permite realizar análisis multidimensional de la información almacenada en el Data Warehouse.
-
-
-
-\### 5. Reportes — SSRS
-
-
-
-Carpeta:
-
-
-
-ReportesACME/
-
-
-
-Contiene los reportes desarrollados utilizando SQL Server Reporting Services.
-
-
+Contiene los reportes desarrollados utilizando **SQL Server Reporting Services (SSRS)**.
 
 Entre los reportes incluidos se encuentran:
 
+* Cantidad vendida por día
+* Condición de pago de clientes
 
+<img width="648" height="676" alt="Reporte de condición de pago de clientes" src="https://github.com/user-attachments/assets/b245e11d-5d40-4a3d-b3ea-dcc19f4c1319" />
 
-\* Cantidad vendida por día
+* Desempeño de empleados
+* Impacto de descuentos
 
-\* Condición de pago de clientes
+<img width="1213" height="557" alt="Reporte de impacto de descuentos" src="https://github.com/user-attachments/assets/0d5ac416-0275-4a91-a5d5-2de2368a617d" />
 
-\* Desempeño de empleados
+Los reportes utilizan como origen de datos **el Data Warehouse y/o el cubo OLAP**, dependiendo del reporte, permitiendo presentar la información empresarial de forma estructurada.
 
-\* Impacto de descuentos
+### 6. Dashboard — Power BI
 
+<img width="1022" height="572" alt="Dashboard de Power BI" src="https://github.com/user-attachments/assets/bef0f71f-3c40-47c8-9ba1-2cb6fefc2e68" />
 
+**Archivo:**
 
-Los reportes permiten consultar y presentar información empresarial de forma estructurada.
+`PowerBi CoorporacionAcme (DW).pbix`
 
+Contiene el dashboard desarrollado en **Microsoft Power BI**, utilizando directamente el **Data Warehouse como origen de datos**.
 
+Power BI permite complementar los reportes tradicionales mediante visualizaciones interactivas, indicadores y diferentes perspectivas de análisis sobre la información empresarial.
 
-\### 6. Dashboard — Power BI
+## Estructura del repositorio
 
-
-
-Archivo:
-
-
-
-PowerBi CoorporacionAcme (DW).pbix
-
-
-
-Contiene el dashboard desarrollado en Power BI utilizando información proveniente del Data Warehouse.
-
-
-
-Power BI permite complementar los reportes tradicionales mediante visualizaciones interactivas y análisis de indicadores.
-
-
-
-\## Estructura del repositorio
-
-
-
+```text
 ACME/
-
 │
-
 ├── CuboDwCorporacionACME/
-
 │   ├── Dim Cliente.dim
-
 │   ├── Dim Condicion Pago.dim
-
 │   ├── Dim Descuento.dim
-
 │   ├── Dim Empleado.dim
-
 │   ├── Dim Fecha.dim
-
 │   ├── Dim Forma Pago.dim
-
 │   ├── Dim Producto.dim
-
 │   ├── DW Corporacion ACME CUBO.cube
-
 │   ├── DW Corporacion ACME CUBO.partitions
-
 │   ├── DW Corporacion ACME Vista.dsv
-
 │   └── ...
-
 │
-
-├── ETL\_CorporacionACME/
-
+├── ETL_CorporacionACME/
 │   ├── Package.dtsx
-
 │   ├── Project.params
-
 │   └── ...
-
 │
-
 ├── ReportesACME/
-
 │   ├── CantidadVendidaPorDia.rdl
-
 │   ├── CondicionPagoClientes.rdl
-
 │   ├── DesempeñoEmpleados.rdl
-
 │   ├── ImpactoDescuentos.rdl
-
 │   └── ...
-
 │
-
-├── DB\_CorporacionACME.sql
-
-├── DW\_CorporacionACME.sql
-
+├── DB_CorporacionACME.sql
+├── DW_CorporacionACME.sql
 ├── PowerBi CoorporacionAcme (DW).pbix
-
 ├── .gitignore
-
 └── README.md
-
 ```
 
+## Flujo de datos
 
+El flujo general de la solución es el siguiente:
 
-\## Flujo de datos
+### 1. Fuente de datos
 
+La información se encuentra inicialmente en la **base de datos transaccional de Corporación ACME**.
 
+### 2. Extracción
 
-El flujo general de la solución es:
+**SSIS** obtiene los datos necesarios desde la base de datos operacional.
 
+### 3. Transformación
 
+Los datos son procesados, transformados y preparados para su utilización en el entorno analítico.
 
-\*\*1. Fuente de datos\*\*
+### 4. Carga
 
+La información transformada es almacenada en el **Data Warehouse**.
 
+### 5. Modelado analítico
 
-La información se encuentra inicialmente en la base de datos transaccional de Corporación ACME.
+**SSAS** utiliza el Data Warehouse como fuente para construir el modelo multidimensional y el cubo OLAP.
 
+### 6. Consumo de información
 
+La información puede ser consultada mediante diferentes herramientas:
 
-\*\*2. Extracción\*\*
+* **Power BI**, utilizando directamente el Data Warehouse como origen.
+* **SSRS**, utilizando el Data Warehouse y/o el cubo OLAP como origen, según el reporte.
+* **SSAS**, mediante el cubo OLAP para análisis multidimensional.
 
-
-
-SSIS obtiene los datos necesarios desde la base de datos operacional.
-
-
-
-\*\*3. Transformación\*\*
-
-
-
-Los datos son procesados y preparados para su utilización en el entorno analítico.
-
-
-
-\*\*4. Carga\*\*
-
-
-
-La información transformada es almacenada en el Data Warehouse.
-
-
-
-\*\*5. Modelado analítico\*\*
-
-
-
-SSAS utiliza el Data Warehouse como fuente para construir el modelo multidimensional y el cubo OLAP.
-
-
-
-\*\*6. Consumo de información\*\*
-
-
-
-La información puede ser utilizada mediante:
-
-
-
-\* Reportes SSRS.
-
-\* Cubo OLAP.
-
-\* Dashboard de Power BI.
-
-
-
-\## Requisitos
-
-
+## Requisitos
 
 Para trabajar con el proyecto se requiere un entorno compatible con las tecnologías utilizadas, incluyendo:
 
+* Windows
+* SQL Server
+* Visual Studio con las extensiones necesarias para SSIS y SSAS
+* SQL Server Integration Services
+* SQL Server Analysis Services
+* SQL Server Reporting Services
+* Power BI Desktop
 
+## Configuración de conexiones
 
-\* Windows
-
-\* SQL Server
-
-\* Visual Studio con las extensiones necesarias para SSIS y SSAS
-
-\* SQL Server Integration Services
-
-\* SQL Server Analysis Services
-
-\* SQL Server Reporting Services
-
-\* Power BI Desktop
-
-
-
-\## Configuración de conexiones
-
-
-
-Los proyectos utilizan conexiones mediante autenticación integrada de Windows.
-
-
+Los proyectos utilizan conexiones mediante **autenticación integrada de Windows**.
 
 Las conexiones incluidas en los archivos del proyecto apuntan a una instancia local de SQL Server.
 
-
-
 Por ejemplo:
 
-
-
-MSI\\SQLMULTI
-
-
+```text
+MSI\SQLMULTI
+```
 
 Al clonar el repositorio en otro equipo, las conexiones deberán adaptarse a la instancia de SQL Server disponible en ese entorno.
 
-
-
-\## Ejecución general
-
-
+## Ejecución general
 
 Para reproducir el proyecto:
 
+1. Crear la base de datos operacional utilizando `DB_CorporacionACME.sql`.
+2. Crear el Data Warehouse utilizando `DW_CorporacionACME.sql`.
+3. Configurar las conexiones de SQL Server según el entorno local.
+4. Abrir el proyecto `ETL_CorporacionACME` y ejecutar el proceso ETL.
+5. Abrir el proyecto `CuboDwCorporacionACME` para trabajar con el modelo multidimensional.
+6. Abrir el proyecto `ReportesACME` para trabajar con los reportes SSRS.
+7. Abrir el archivo `.pbix` con Power BI Desktop para visualizar el dashboard.
 
+> **Nota:** La configuración de las conexiones puede requerir ajustes dependiendo de la instancia de SQL Server y de los servicios disponibles en el equipo donde se clone el proyecto.
 
-1\. Crear/restaurar la base de datos operacional utilizando `DB\_CorporacionACME.sql`.
+## Objetivo
 
-2\. Crear el Data Warehouse utilizando `DW\_CorporacionACME.sql`.
+El objetivo del proyecto es demostrar la implementación de una solución integral de **Business Intelligence** capaz de transformar datos operacionales en información estructurada para facilitar el análisis empresarial y apoyar la toma de decisiones.
 
-3\. Configurar las conexiones de SQL Server según el entorno local.
+## Estado del proyecto
 
-4\. Abrir el proyecto `ETL\_CorporacionACME` y ejecutar el proceso ETL.
+**Proyecto académico finalizado**, documentado como parte del portafolio de proyectos de Business Intelligence.
 
-5\. Abrir el proyecto `CuboDwCorporacionACME` para trabajar con el modelo multidimensional.
+## Autor
 
-6\. Abrir el proyecto `ReportesACME` para trabajar con los reportes SSRS.
-
-7\. Abrir el archivo `.pbix` con Power BI Desktop para visualizar el dashboard.
-
-
-
-> \*\*Nota:\*\* La configuración de conexiones puede requerir ajustes dependiendo de la instancia de SQL Server y de los servicios disponibles en el equipo donde se clone el proyecto.
-
-
-
-\## Objetivo
-
-
-
-El objetivo del proyecto es demostrar la implementación de una solución integral de Business Intelligence capaz de transformar datos operacionales en información estructurada para facilitar el análisis empresarial y la toma de decisiones.
-
-
-
-\## Estado del proyecto
-
-
-
-Proyecto académico finalizado y documentado como parte del portafolio de proyectos de Business Intelligence.
-
-
-
-\## Autor
-
-
-
-\*\*Carla Duluc\*\*
-
-
+**Carla Duluc**
 
 Estudiante de Ingeniería de Software.
-
 
 
